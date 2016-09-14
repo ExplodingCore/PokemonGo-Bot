@@ -5,8 +5,8 @@ namespace PokemonGo.RocketAPI.Helpers
 {
     public static class RandomHelper
     {
-        private static readonly Random _random = new Random();
-        private static readonly Random _rng = new Random();
+        private static readonly CryptoRandom _random = new CryptoRandom(true);
+        private static readonly CryptoRandom _rng = new CryptoRandom(true);
 
         public static long GetLongRandom(long min, long max)
         {
@@ -29,7 +29,7 @@ namespace PokemonGo.RocketAPI.Helpers
 
         public static int RandomNumber(int min, int max)
         {
-            Random random = new Random();
+            CryptoRandom random = new CryptoRandom(true);
             return random.Next(min, max);
         }
     }

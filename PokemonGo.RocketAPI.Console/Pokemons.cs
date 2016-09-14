@@ -807,7 +807,7 @@ namespace PokemonGo.RocketAPI.Console
                     }
                     else
                         failed += resp.Message + " ";
-                    await RandomHelper.RandomDelay(5000, 6000);
+                    await RandomHelper.RandomDelay(1000, 2000);
                 }
 
                 if (failed != string.Empty)

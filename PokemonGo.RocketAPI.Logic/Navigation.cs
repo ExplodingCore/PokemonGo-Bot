@@ -18,9 +18,9 @@ namespace PokemonGo.RocketAPI.Logic
 
         public bool pauseWalking = false;
 
-        private static readonly Random RandomDevice = new Random();
+        private static readonly CryptoRandom RandomDevice = new CryptoRandom(true);
 
-        private const double SpeedDownTo = 10 / 3.6;
+        private const double SpeedDownTo = 50 / 3.6;
         private readonly Client _client;
         public readonly ISettings _clientSettings;
 
@@ -74,11 +74,11 @@ namespace PokemonGo.RocketAPI.Logic
                 sourceLocation = new GeoCoordinate(_client.CurrentLatitude, _client.CurrentLongitude);
                 var currentDistanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
 
-                if (currentDistanceToTarget < 40)
+                if (currentDistanceToTarget < 100)
                 {
                     if (speedInMetersPerSecond > SpeedDownTo)
                     {
-                        if (log) { Logger.ColoredConsoleWrite(ConsoleColor.DarkCyan, $"We are within 40 meters of the target. Slowing down to ~10 km/h to not pass the target."); }
+                        if (log) { Logger.ColoredConsoleWrite(ConsoleColor.DarkCyan, $"We are within 100 meters of the target. Slowing down to ~50 km/h to not pass the target."); }
                         speedInMetersPerSecond = SpeedDownTo;
                     }
                 }
@@ -134,7 +134,7 @@ namespace PokemonGo.RocketAPI.Logic
             //    double CROSSPROP = 99;
             //    double MUTPROP = 20;
             //    List<List<int>> population = new List<List<int>>();
-            //    Random rnd = new Random();
+            //    CryptoRandom rnd = new CryptoRandom(true);
             //    //Create Population
             //    for (var i = POPSIZE; i > 0; --i)
             //    {
@@ -251,7 +251,7 @@ namespace PokemonGo.RocketAPI.Logic
                 return child;
             }
 
-            Random rnd = new Random();
+            CryptoRandom rnd = new CryptoRandom(true);
             int p = rnd.Next(1, child.Count - 2);
             for (; p < child.Count - 1; ++p)
             {
@@ -327,7 +327,7 @@ namespace PokemonGo.RocketAPI.Logic
 
         private void mutate(ref List<int> _chromosome)
         {
-            Random rnd = new Random();
+            CryptoRandom rnd = new CryptoRandom(true);
             int i1 = rnd.Next(1, _chromosome.Count - 2), i2 = rnd.Next(1, _chromosome.Count - 2);
             int temp = _chromosome[i1];
             _chromosome[i1] = _chromosome[i2];
@@ -354,7 +354,7 @@ namespace PokemonGo.RocketAPI.Logic
                 return listSelection;
             }
 
-            Random rnd = new Random();
+            CryptoRandom rnd = new CryptoRandom(true);
             int selcetedChr = -1;
             do
             {

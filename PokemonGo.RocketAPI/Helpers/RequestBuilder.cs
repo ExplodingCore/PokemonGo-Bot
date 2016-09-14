@@ -144,7 +144,7 @@ namespace PokemonGo.RocketAPI.Helpers
                 FirmwareType = this.FirmwareType,
                 FirmwareFingerprint = this.FirmwareFingerprint
             };
-            Random r = new Random();
+            CryptoRandom r = new CryptoRandom(true);
             int accuracy = r.Next(15, 50);
             sig.LocationFix.Add(new POGOProtos.Networking.Envelopes.Signature.Types.LocationFix()
             {
@@ -193,7 +193,7 @@ namespace PokemonGo.RocketAPI.Helpers
             sig.Unknown25 = -8537042734809897855; // Generated via xxHash64("\"b8fa9757195897aae92c53dbcf8a60fb3d86d745\"".ToByteArray(), 0x88533787) | 0.33 Version
 
             var iv = new byte[32];
-            new Random().NextBytes(iv);
+            new CryptoRandom(true).NextBytes(iv);
 
             var platformRequest = new RequestEnvelope.Types.PlatformRequest()
             {
@@ -264,7 +264,7 @@ namespace PokemonGo.RocketAPI.Helpers
             });
 
         }
-        private static readonly Random RandomDevice = new Random();
+        private static readonly CryptoRandom RandomDevice = new CryptoRandom(true);
 
         public static double GenRandom(double num)
         {

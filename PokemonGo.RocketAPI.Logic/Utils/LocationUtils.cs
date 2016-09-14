@@ -29,7 +29,7 @@ namespace PokemonGo.RocketAPI.Logic.Utils
                 }
                 else // if google not working
                 {
-                    Random random = new Random();
+                    CryptoRandom random = new CryptoRandom(true);
                     double maximum = 11.0f;
                     double minimum = 8.6f;
                     double return1 = random.NextDouble() * (maximum - minimum) + minimum;
@@ -38,7 +38,7 @@ namespace PokemonGo.RocketAPI.Logic.Utils
                 }
             } catch (Exception)
             {
-                Random random = new Random();
+                CryptoRandom random = new CryptoRandom(true);
                 double maximum = 11.0f;
                 double minimum = 8.6f;
                 double return1 = random.NextDouble() * (maximum - minimum) + minimum;
