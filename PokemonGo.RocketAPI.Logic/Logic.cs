@@ -1280,7 +1280,7 @@ namespace PokemonGo.RocketAPI.Logic
                     //get distance to pokemon
                     var distance = LocationUtils.CalculateDistanceInMeters(_client.CurrentLatitude, _client.CurrentLongitude, pokemon.Latitude, pokemon.Longitude);
 
-                    await Task.Delay(distance > 100 ? 500 : 100);
+                    await Task.Delay(distance > 100 ? 1000 : 100);
 
                     // Do Catch here
                     await catchPokemon(pokemon.EncounterId, pokemon.SpawnPointId, pokemon.PokemonId, pokemon.Longitude, pokemon.Latitude);
