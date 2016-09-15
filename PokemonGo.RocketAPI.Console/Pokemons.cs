@@ -23,6 +23,8 @@ using GoogleMapsApi.Entities.Elevation.Request;
 using GoogleMapsApi;
 using GoogleMapsApi.Entities.Common;
 using GoogleMapsApi.Entities.Elevation.Response;
+using GMap.NET;
+using GMap.NET.MapProviders;
 
 namespace PokemonGo.RocketAPI.Console
 {
@@ -79,6 +81,7 @@ namespace PokemonGo.RocketAPI.Console
             Globals.pauseAtPokeStop = false;
             btnForceUnban.Text = "Pause Walking";
             Execute();
+            locationPanel1.Init(true,0,0,0);
             
         }
 
@@ -243,7 +246,8 @@ namespace PokemonGo.RocketAPI.Console
                     checkBox5.Checked = Globals.autoIncubate;
                     checkBox4.Checked = Globals.useBasicIncubators;
                     text_GoogleMapsAPIKey.Text = Globals.GoogleMapsAPIKey;
-
+                    numericUpDown1.Value = decimal.Parse(Globals.speed.ToString());
+                    numericUpDown2.Value = decimal.Parse(Globals.MinWalkSpeed.ToString());
                     itemsPanel1.num_MaxPokeballs.Value = Globals.pokeball;
                     itemsPanel1.num_MaxGreatBalls.Value =  Globals.greatball;
                     itemsPanel1.num_MaxUltraBalls.Value =  Globals.ultraball;
@@ -265,7 +269,8 @@ namespace PokemonGo.RocketAPI.Console
 		            numTravelSpeed.Value = (int) Globals.RelocateDefaultLocationTravelSpeed;
                     #endregion
  	
-                    itemsPanel1.ExecuteItemsLoad();
+                    itemsPanel1.Execute();
+                    playerPanel1.Execute(profile,pokemons);
                 }
             }
             catch (Exception e)
@@ -868,6 +873,20 @@ namespace PokemonGo.RocketAPI.Console
                 MessageBox.Show(resp.Message + " evolving failed!", "Evolve Status", MessageBoxButtons.OK);
         }
 
+        public static double[] FindLocation(string address)
+        {
+            double[] ret = { 0.0, 0.0 };
+            GeoCoderStatusCode status;
+            var pos = GMapProviders.GoogleMap.GetPoint(address, out status);
+            if (status == GeoCoderStatusCode.G_GEO_SUCCESS && pos != null)
+            {
+                ret = new double[2];
+                ret[0] = pos.Value.Lat;
+                ret[1] = pos.Value.Lng;
+            }
+            return ret;
+        }        
+
         private async void powerUpToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var pokemon = (PokemonData)PokemonListView.SelectedItems[0].Tag;
@@ -1052,7 +1071,8 @@ namespace PokemonGo.RocketAPI.Console
             }
             else
             {
-                new LocationSelect(true, (int)profile.PlayerData.Team, stats.Level, stats.Experience).Show();
+                //new LocationSelect(true, (int)profile.PlayerData.Team, stats.Level, stats.Experience).Show();
+                Options.SelectTab(tabPage4);
             }
         }
 
@@ -1400,7 +1420,31 @@ namespace PokemonGo.RocketAPI.Console
         {
             try
             {
-            	Globals.RelocateDefaultLocationTravelSpeed = (double) numTravelSpeed.Value;
+            	Globals.RelocateDefaultLocationTravelSpeed = double.Parse(numTravelSpeed.Value.ToString());
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void numDefaultSpeed_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                Globals.speed = double.Parse(numTravelSpeed.Value.ToString());
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void numMinSpeed_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                Globals.MinWalkSpeed = int.Parse(numTravelSpeed.Value.ToString());
             }
             catch
             {
@@ -1475,7 +1519,24 @@ namespace PokemonGo.RocketAPI.Console
                 Logger.ColoredConsoleWrite(ConsoleColor.Green, "Default Location Set will navigate there after next pokestop!");
             }          
         }
-	}
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            var ret = FindLocation(textBox1.Text);
+            textBox4.Text = ret[0].ToString();
+            textBox5.Text = ret[1].ToString();
+        }
+
+        private void label9_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void text_Speed_TextChanged(object sender, EventArgs e)
+        {
+            
+        }
+    }
     public static class ControlExtensions
     {
         public static void DoubleBuffered(this Control control, bool enable)
