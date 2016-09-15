@@ -18,6 +18,7 @@ using GoogleMapsApi.Entities.Elevation.Request;
 using GoogleMapsApi.Entities.Elevation.Response;
 using PokemonGo.RocketAPI.Logic.Utils;
 using PokemonGo.RocketApi.PokeMap;
+using POGOProtos.Map.Fort;
 
 namespace PokemonGo.RocketAPI.Console
 {
@@ -30,6 +31,7 @@ namespace PokemonGo.RocketAPI.Console
 
             buttonRefreshPokemon.Visible = false;
             buttonRefreshPokemon.Enabled = false;
+            buttonRefreshForts.Visible = false;
 
             if (asViewOnly)
             {
@@ -41,7 +43,10 @@ namespace PokemonGo.RocketAPI.Console
         public bool close = true;
 
         private GMarkerGoogle _botMarker;
-
+        private GMapPolygon _circle;
+        private GMarkerGoogle _botStartMarker;
+        private GMapOverlay routeOverlay;
+        private GMapOverlay PokemonOverlay;
         private GMapRoute _botRoute = new GMapRoute("BotRoute");
         private Dictionary<string, GMarkerGoogle> _pokemonMarks = new Dictionary<string, GMarkerGoogle>();
         private GMapOverlay _pokemonOverlay = new GMapOverlay("Pokemon");
@@ -78,6 +83,54 @@ namespace PokemonGo.RocketAPI.Console
             //await Logic.Logic._instance.CheckAvailablePokemons(Logic.Logic._client);
             buttonRefreshPokemon.Enabled = true;
         }
+        
+        private async void buttonRefreshForts_Click(object sender, EventArgs e)
+        {
+        	var button = ((Button)sender);
+        	button.Enabled = false;
+            var client = Logic.Logic._client;
+            if (client.readyToUse )
+            {
+            	Logger.ColoredConsoleWrite(ConsoleColor.DarkRed, "Refreshing Forts", LogLevel.Warning);
+                var mapObjects = await client.Map.GetMapObjects();
+                var mapCells = mapObjects.Item1.MapCells;
+	            var pokeStops =
+	            mapCells.SelectMany(i => i.Forts)
+	            .Where(
+	                i =>
+	                i.Type == FortType.Checkpoint &&
+	                i.CooldownCompleteTimestampMs < (long)(DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0)).TotalMilliseconds)
+	                .OrderBy(
+	                i =>
+	                LocationUtils.CalculateDistanceInMeters(Globals.latitute, Globals.longitude, i.Latitude, i.Longitude));
+	            if (pokeStops.Any() )
+	            {
+	            	InfoObservable_HandlePokeStop (pokeStops.ToArray());
+	            }
+	            var pokeGyms = mapCells.SelectMany(i => i.Forts)
+	            .Where(
+	                i =>
+	                i.Type == FortType.Gym )
+	                .OrderBy(
+	                i =>
+	                LocationUtils.CalculateDistanceInMeters(Globals.latitute, Globals.longitude, i.Latitude, i.Longitude));
+	            if (pokeGyms.Any() )
+	            {
+	                InfoObservable_HandlePokeGym (pokeGyms.ToArray());
+	                
+	            }                
+	            if (!map.Overlays.Contains(_pokeStopsOverlay)){
+	            	map.Overlays.Add(_pokeStopsOverlay);
+	            }
+	            if (!map.Overlays.Contains(_pokeGymsOverlay)){
+	            	map.Overlays.Add(_pokeGymsOverlay);
+	            }
+            	Logger.ColoredConsoleWrite(ConsoleColor.DarkRed, "Refreshing Forts Done.", LogLevel.Warning);
+            }
+           
+
+            button.Enabled = true;
+        }        
 
         private void bw_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -233,8 +286,18 @@ namespace PokemonGo.RocketAPI.Console
                         _pokeStopsOverlay.IsVisibile = false;
                         _pokeStopsOverlay.Markers.Clear();
                         _pokeStopsMarks.Clear();
+                        routeOverlay.Polygons.Clear();
+                        routeOverlay.Polygons.Add(_circle = CreateCircle(new PointLatLng(Globals.latitute, Globals.longitude), Globals.radius, 100));
+                        routeOverlay.Markers.Clear();
+                        _botStartMarker = new GMarkerGoogle(new PointLatLng(), Properties.Resources.start_point);
+                        _botStartMarker.Position = new PointLatLng(Globals.latitute, Globals.longitude);
+                        _botStartMarker.ToolTipText = string.Format("Start Point.\n{0}\n{1},{2}", FindAddress(Globals.latitute, Globals.longitude), Globals.latitute, Globals.longitude);
+                        _botStartMarker.ToolTip.Font = new System.Drawing.Font("Arial", 12, System.Drawing.GraphicsUnit.Pixel);
+                        _botStartMarker.ToolTipMode = MarkerTooltipMode.OnMouseOver;
+                        routeOverlay.Markers.Add(_botStartMarker);
+                        routeOverlay.Markers.Add(_botMarker);
                         int prevCount = pokeStops.Length;
-
+                        //<var filteredPokeStops = pokeStops;
                         var filteredPokeStops = pokeStops.Where(i => LocationUtils.CalculateDistanceInMeters(Logic.Logic._instance._clientSettings.DefaultLatitude, Logic.Logic._instance._clientSettings.DefaultLongitude, i.Latitude, i.Longitude) <= Logic.Logic._instance._clientSettings.MaxWalkingRadiusInMeters).ToArray();
                         Logger.ColoredConsoleWrite(ConsoleColor.White, string.Format("Got new Pokestop Count: {0}, unfiltered: {1}", filteredPokeStops.Length, pokeStops.Length));
 
@@ -312,7 +375,7 @@ namespace PokemonGo.RocketAPI.Console
                         _pokeGymsOverlay.Markers.Clear();
                         _pokeGymsMarks.Clear();
                         int prevCount = forts.Length;
-
+                        //< var filteredForts = forts;
                         var filteredForts = forts.Where(i => LocationUtils.CalculateDistanceInMeters(Logic.Logic._instance._clientSettings.DefaultLatitude, Logic.Logic._instance._clientSettings.DefaultLongitude, i.Latitude, i.Longitude) <= Logic.Logic._instance._clientSettings.MaxWalkingRadiusInMeters).ToArray();
                         Logger.ColoredConsoleWrite(ConsoleColor.White, string.Format("Got new Gym Count: {0}, unfiltered: {1}", filteredForts.Length, forts.Length));
 
@@ -433,18 +496,19 @@ namespace PokemonGo.RocketAPI.Console
             map.Visible = true;
             map.Dock = DockStyle.Fill;
             map.ShowCenter = false;
-            GMapOverlay routeOverlay = new GMapOverlay();
+            routeOverlay = new GMapOverlay();
             routeOverlay.Routes.Add(_botRoute);
-            GMapOverlay PokemonOverlay = new GMapOverlay();
+            PokemonOverlay = new GMapOverlay();
             routeOverlay.Markers.Add(_botMarker);
-            GMarkerGoogle _botStartMarker = new GMarkerGoogle(new PointLatLng(), Properties.Resources.start_point);
+            _botStartMarker = new GMarkerGoogle(new PointLatLng(), Properties.Resources.start_point);
             _botStartMarker.Position = new PointLatLng(Globals.latitute, Globals.longitude);
             _botStartMarker.ToolTipText = string.Format("Start Point.\n{0}\n{1},{2}", FindAddress(Globals.latitute, Globals.longitude), Globals.latitute, Globals.longitude);
             _botStartMarker.ToolTip.Font = new System.Drawing.Font("Arial", 12, System.Drawing.GraphicsUnit.Pixel);
             _botStartMarker.ToolTipMode = MarkerTooltipMode.OnMouseOver;
             routeOverlay.Markers.Add(_botStartMarker);
-            GMapPolygon circle = CreateCircle(new PointLatLng(Globals.latitute, Globals.longitude), Globals.radius, 100);
-            routeOverlay.Polygons.Add(circle);
+            _circle = CreateCircle(new PointLatLng(Globals.latitute, Globals.longitude), Globals.radius, 100);
+            routeOverlay.Polygons.Add(_circle);
+            
 
             map.Overlays.Add(routeOverlay);
             map.Overlays.Add(_pokeStopsOverlay);
@@ -457,6 +521,7 @@ namespace PokemonGo.RocketAPI.Console
             textBox2.Visible = true;
             buttonRefreshPokemon.Visible = true;
             buttonRefreshPokemon.Enabled = true;
+            buttonRefreshForts.Visible = true;
             cbShowPokeStops.Visible = true;
             cbShowPokemon.Visible = true;
             _pokemonOverlay.IsVisibile = true;
