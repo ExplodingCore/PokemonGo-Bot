@@ -178,7 +178,10 @@ namespace PokemonGo.RocketAPI.Logic
                     Logger.ColoredConsoleWrite(ConsoleColor.Green, "Trying to Restart.");
                     try
                     {
-                        _telegram.getClient().StopReceiving();
+                        if (_telegram != null)
+                        {
+                            _telegram.getClient().StopReceiving();
+                        }
                     }
                     catch (Exception) { }
                 }
@@ -862,6 +865,18 @@ namespace PokemonGo.RocketAPI.Logic
                         {
                             await ExecuteCatchAllNearbyPokemons();
 
+                            if (Pokestop != null && Pokestop.LureInfo != null)
+                            {
+                                var lure_Pokemon = Pokestop.LureInfo.ActivePokemonId;
+                                if (!_clientSettings.catchPokemonSkipList.Contains(lure_Pokemon))
+                                {
+                                    await catchPokemon(Pokestop.LureInfo.EncounterId, Pokestop.LureInfo.FortId, Pokestop.LureInfo.ActivePokemonId);
+                                }
+                                else
+                                {
+                                    Logger.ColoredConsoleWrite(ConsoleColor.Green, "Skipped Lure Pokemon: " + pokeStop.LureInfo.ActivePokemonId);
+                                }
+                            }
                             var FortInfo = await _client.Fort.GetFort(Pokestop.Id, Pokestop.Latitude, Pokestop.Longitude);
                             if ((_clientSettings.UseLureAtBreak || _clientSettings.UseLureGUIClick) && havelures && !pokeStop.ActiveFortModifier.Any() && !addedlure)
                             {
@@ -893,8 +908,17 @@ namespace PokemonGo.RocketAPI.Logic
 
         private int GetRandomWalkspeed()
         {
+            var rintwalk = (int)_clientSettings.WalkingSpeedInKilometerPerHour;
             CryptoRandom r = new CryptoRandom(true);
-            var rintwalk = r.Next(_clientSettings.MinWalkSpeed, (int)_clientSettings.WalkingSpeedInKilometerPerHour);
+            Logger.ColoredConsoleWrite(ConsoleColor.DarkGray, $"==============Begin Walkspeed Debug==============");
+            Logger.ColoredConsoleWrite(ConsoleColor.DarkGray, $"Default walking speed: " + _clientSettings.WalkingSpeedInKilometerPerHour);
+            Logger.ColoredConsoleWrite(ConsoleColor.DarkGray, $"Min walking speed " + _clientSettings.MinWalkSpeed);
+
+            if ((int)_clientSettings.WalkingSpeedInKilometerPerHour - (int)_clientSettings.MinWalkSpeed > 1)
+            {
+                rintwalk = r.Next((int)_clientSettings.MinWalkSpeed, (int)_clientSettings.WalkingSpeedInKilometerPerHour);
+            }
+            Logger.ColoredConsoleWrite(ConsoleColor.DarkGray, $"==============End Walkspeed Debug==============");
             Logger.ColoredConsoleWrite(ConsoleColor.Yellow, $"Setting Walk speed for this leg to " + rintwalk + "km/h");
             return rintwalk;
         }
@@ -1120,18 +1144,10 @@ namespace PokemonGo.RocketAPI.Logic
                     {
                         egg = fortSearch.PokemonDataEgg.EggKmWalkedTarget + "km";
                     }
-
                     string items = "";
                     if (fortSearch.ItemsAwarded != null)
                     {
                         items = StringUtils.GetSummedFriendlyNameOfItemAwardList(fortSearch.ItemsAwarded);
-                    }
-
-                    if (pokeballoutofstock && (items.IndexOf("PokeBall") > -1))
-                    {
-                        Logger.ColoredConsoleWrite(ConsoleColor.Red, $"Detected at least one Pokeball - Enabling Catch Pokemon");
-                        pokeballoutofstock = false;
-                        _clientSettings.CatchPokemon = true;
                     }
                     failed_softban = 0;
                     _botStats.AddExperience(fortSearch.ExperienceAwarded);
