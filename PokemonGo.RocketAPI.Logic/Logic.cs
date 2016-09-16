@@ -984,7 +984,7 @@ namespace PokemonGo.RocketAPI.Logic
                         foreach (var point in step.PolyLine.Points)
                         {
                             var distanceDelta = LocationUtils.CalculateDistanceInMeters(new GeoCoordinate(point.Latitude, point.Longitude), new GeoCoordinate(lastpoint.Latitude, lastpoint.Longitude));
-                            if (distanceDelta > 10 && distanceDelta <= 85)
+                            if (distanceDelta > 10 && distanceDelta <= 100)
                             {
                                 var newspeed = (walkspeed/8) + (walkspeed * (distanceDelta / 100));
                                 if (newspeed > walkspeed)
@@ -992,7 +992,7 @@ namespace PokemonGo.RocketAPI.Logic
                                 Logger.ColoredConsoleWrite(ConsoleColor.DarkGreen, "Next Step is " + Math.Round(distanceDelta) + " meters. Slowing down to ~" + Math.Round(newspeed) + " km/h to not pass the traget.");
                                 var update = await _navigation.HumanLikeWalking(new GeoCoordinate(point.Latitude, point.Longitude), newspeed, task, true, false);
                             }
-                            else if (distanceDelta > 90)
+                            else if (distanceDelta > 100)
                             {
                                 var update = await _navigation.HumanLikeWalking(new GeoCoordinate(point.Latitude, point.Longitude), walkspeed, task, true, false);
                             }
