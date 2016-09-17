@@ -845,7 +845,7 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     await ExecuteCatchAllNearbyPokemons();
                     var farmed = await CheckAndFarmNearbyPokeStop(pokeStop, _client, fortInfo);
-                    await RandomHelper.RandomDelay(50, 2000); // wait to start moving again 
+                    await RandomHelper.RandomDelay(50, 500); // wait to start moving again 
                 }
                 #endregion
             }
@@ -862,6 +862,7 @@ namespace PokemonGo.RocketAPI.Logic
                     walkspeed = r.Next((int)_clientSettings.MinWalkSpeed, (int)_clientSettings.WalkingSpeedInKilometerPerHour);
                 }
             }
+            Logger.ColoredConsoleWrite(ConsoleColor.Yellow, $"Random walk speed triggered! Setting speed to " + Math.Round((double)walkspeed) + "km/h for this leg.");
             return walkspeed;
         }
 
@@ -984,9 +985,9 @@ namespace PokemonGo.RocketAPI.Logic
                         foreach (var point in step.PolyLine.Points)
                         {
                             var distanceDelta = LocationUtils.CalculateDistanceInMeters(new GeoCoordinate(point.Latitude, point.Longitude), new GeoCoordinate(lastpoint.Latitude, lastpoint.Longitude));
-                            if (distanceDelta > 10 && distanceDelta <= 100)
+                            if (distanceDelta > 25 && distanceDelta <= 100)
                             {
-                                var newspeed = (walkspeed/8) + (walkspeed * (distanceDelta / 100));
+                                var newspeed = walkspeed * Math.Sqrt(distanceDelta / 100);
                                 if (newspeed > walkspeed)
                                     newspeed = walkspeed;
                                 Logger.ColoredConsoleWrite(ConsoleColor.DarkGreen, "Next Step is " + Math.Round(distanceDelta) + " meters. Slowing down to ~" + Math.Round(newspeed) + " km/h to not pass the traget.");
