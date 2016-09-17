@@ -82,7 +82,8 @@ namespace PokemonGo.RocketAPI.Console
             btnForceUnban.Text = "Pause Walking";
             Execute();
             locationPanel1.Init(true,0,0,0);
-            
+            eggsPanel1.pokemons = pokemons;
+            eggsPanel1.Execute();            
         }
 
         private void Pokemons_Close(object sender, FormClosingEventArgs e)
@@ -1073,6 +1074,8 @@ namespace PokemonGo.RocketAPI.Console
             {
                 //new LocationSelect(true, (int)profile.PlayerData.Team, stats.Level, stats.Experience).Show();
                 Options.SelectTab(tabPage4);
+                if (Control.ModifierKeys == Keys.Shift ) 
+				   new EggsForm().Show(pokemons); // For now, Trick to show eggs                
             }
         }
 
@@ -1229,14 +1232,13 @@ namespace PokemonGo.RocketAPI.Console
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Globals.UseIncenseGUIClick = true;
+            Globals.UseIncenseGUIClick = true;            
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             Globals.RepeatUserRoute = checkBox1.Checked;
         }
-
 
         private void checkBox10_CheckedChanged(object sender, EventArgs e)
         {
