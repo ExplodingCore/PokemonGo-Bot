@@ -405,22 +405,26 @@ namespace PokemonGo.RocketAPI.Console
             }
         }
 
-        public List<PokemonId> catchPokemonSkipList
+        public IList<PokemonId> catchPokemonSkipList
         {
-            get;
-            set;            
+            get { return new List<PokemonId>(); }
+            set { Globals.noCatch = value; }
         }
 
-        public List<PokemonId> pokemonsToHold
+        public IList<PokemonId> pokemonsToHold
         {
-            get;
-            set;            
-        }
+            get { return new List<PokemonId>(); }
+            set { Globals.noTransfer = value; }
 
-        public List<PokemonId> pokemonsToEvolve
+        }        
+
+        public IList<PokemonId> pokemonsToEvolve
         {
-            get;
-            set;            
+            get
+            {
+                return new List<PokemonId>();
+            }
+            set { Globals.doEvolve = value; }
         }
 
         public ICollection<KeyValuePair<ItemId, int>> itemRecycleFilter
