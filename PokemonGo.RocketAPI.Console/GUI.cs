@@ -48,11 +48,11 @@ namespace PokemonGo.RocketAPI.Console
         {
             _clientSettings = new Settings();
             Globals.FirstLoad = false;
-            var ret = MessageBox.Show("The Bot isn't done! Be aware that you can get banned!\n\nDon't login with the new App Version (0.3.7) (0.3.5 is ok!)\n\nOr you will probably get Banned if you use the bot again!\n\nAre you sure you want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (ret == DialogResult.No)
-            {
-                Application.Exit();
-            }
+            //var ret = MessageBox.Show("The Bot isn't done! Be aware that you can get banned!\n\nDon't login with the new App Version (0.3.7) (0.3.5 is ok!)\n\nOr you will probably get Banned if you use the bot again!\n\nAre you sure you want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            //if (ret == DialogResult.No)
+            //{
+            //    Application.Exit();
+            //}
             Directory.CreateDirectory(Program.path);
             Directory.CreateDirectory(Program.path_translation);
             Directory.CreateDirectory(Program.path_pokedata);
@@ -705,13 +705,13 @@ namespace PokemonGo.RocketAPI.Console
 
             // tab 6 - Walk
             ret &= textBoxToGlobalDouble(text_Speed);
-            if ((makePrompts) && (Globals.speed > 15 && Globals.FirstLoad))
-            {
-                var speed = Globals.speed;
-                var dialogResult = MessageBox.Show("The risk of being banned is significantly greater when using higher than human jogging speeds (e.g. > 15km/hr) Click 'No' to use ~10km/hr instead", $"Are you sure you wish to set your speed to {speed} ?", MessageBoxButtons.YesNo);
-                if (dialogResult == DialogResult.No)
-                    Globals.speed = double.Parse("9.5", cords, NumberFormatInfo.InvariantInfo);
-            }
+            //if ((makePrompts) && (Globals.speed > 15 && Globals.FirstLoad))
+            //{
+            //    var speed = Globals.speed;
+            //    var dialogResult = MessageBox.Show("The risk of being banned is significantly greater when using higher than human jogging speeds (e.g. > 15km/hr) Click 'No' to use ~10km/hr instead", $"Are you sure you wish to set your speed to {speed} ?", MessageBoxButtons.YesNo);
+            //    if (dialogResult == DialogResult.No)
+            //        Globals.speed = double.Parse("9.5", cords, NumberFormatInfo.InvariantInfo);
+            //}
 
             var value = text_MinWalkSpeed.Text;
             if (value != String.Empty)
