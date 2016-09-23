@@ -1099,6 +1099,7 @@
             this.comboBox_Device.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_Device.FormattingEnabled = true;
             this.comboBox_Device.Items.AddRange(new object[] {
+            "OnePlus2",
             "lg-optimus-g",
             "nexus7gen2",
             "nexus7gen1",

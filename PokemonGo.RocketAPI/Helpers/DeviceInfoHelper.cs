@@ -9,6 +9,24 @@ namespace PokemonGo.RocketAPI
     public static class DeviceInfoHelper
     {
         public static Dictionary<string, Dictionary<string, string>> DeviceInfoSets = new Dictionary<string, Dictionary<string, string>>() {
+            { "OnePlus2",
+                new Dictionary<string,string>()
+                {
+                    { "AndroidBoardName", "msm8994" },
+                    { "AndroidBootloader", "unknown" },
+                    { "DeviceBrand", "OnePlus" },
+                    { "DeviceId", "3fe52da4a106b28d" },
+                    { "DeviceModel", "OnePlus2" },
+                    { "DeviceModelBoot", "qcom" },
+                    { "DeviceModelIdentifier", "ONE A2003_24_160604" },
+                    { "FirmwareBrand", "OnePlus2" },
+                    { "FirmwareFingerprint", "OnePlus/OnePlus2/OnePlus2:6.0.1/MMB29M/1447840820:user/release-keys" },
+                    { "FirmwareTags", "dev-keys" },
+                    { "FirmwareType", "user" },
+                    { "HardwareManufacturer", "OnePlus" },
+                    { "HardwareModel", "ONE A2003" }
+                }
+            },
             { "lg-optimus-g",
                 new Dictionary<string,string>()
                 {
