@@ -565,8 +565,10 @@ namespace PokemonGo.RocketAPI.Logic
             _clientSettings.pauseTheWalking = true;
             if (!pokeballoutofstock && _clientSettings.CatchPokemon)
             {
-                Logger.ColoredConsoleWrite(ConsoleColor.Yellow, "Trying to capture: " + _p._pokeId);
+                Logger.ColoredConsoleWrite(ConsoleColor.Yellow, "Trying to capture: " + _p._pokeId + " at " + _p._lat + " / " + _p._lng);
                 var result = await _client.Player.UpdatePlayerLocation(_p._lat, _p._lng, _clientSettings.DefaultAltitude);
+                Logger.ColoredConsoleWrite(ConsoleColor.Yellow, "Waiting for pokemon to appear...");
+                await RandomHelper.RandomDelay(4000, 6000);
                 StateSniper = true;
                 await ExecuteCatchAllNearbyPokemons();
                 StateSniper = false;
@@ -586,8 +588,10 @@ namespace PokemonGo.RocketAPI.Logic
             {
                 _clientSettings.pauseTheWalking = true;
                 SnipokemonIds = id;
-                Logger.ColoredConsoleWrite(ConsoleColor.Yellow, "Trying to capture: " + id);
+                Logger.ColoredConsoleWrite(ConsoleColor.Yellow, "Trying to capture: " + id + " at " + coord.Latitude + " / " + coord.Longitude);
                 var result = await _client.Player.UpdatePlayerLocation(coord.Latitude, coord.Longitude, _clientSettings.DefaultAltitude);
+                Logger.ColoredConsoleWrite(ConsoleColor.Yellow, "Waiting for pokemon to appear");
+                await RandomHelper.RandomDelay(4000, 6000);
                 StateSniper = true;
                 await ExecuteCatchAllNearbyPokemons();
                 StateSniper = false;
@@ -911,7 +915,7 @@ namespace PokemonGo.RocketAPI.Logic
                 {
                     await ExecuteCatchAllNearbyPokemons();
                     var farmed = await CheckAndFarmNearbyPokeStop(pokeStop, _client, fortInfo);
-                    await RandomHelper.RandomDelay(50, 2000); // wait to start moving again 
+                    await RandomHelper.RandomDelay(50, 500); // wait to start moving again 
                 }
                 #endregion
             }
@@ -953,10 +957,11 @@ namespace PokemonGo.RocketAPI.Logic
             var walkspeed = (int)_clientSettings.WalkingSpeedInKilometerPerHour;
             if (_clientSettings.RandomReduceSpeed)
             {
-                Random r = new Random();
+                CryptoRandom r = new CryptoRandom(true);
                 if ((int)_clientSettings.WalkingSpeedInKilometerPerHour - (int)_clientSettings.MinWalkSpeed > 1)
                 {
                     walkspeed = r.Next((int)_clientSettings.MinWalkSpeed, (int)_clientSettings.WalkingSpeedInKilometerPerHour);
+                    Logger.ColoredConsoleWrite(ConsoleColor.Yellow, $"Random walk speed: " + Math.Round((double)walkspeed, 2) + " km/h");
                 }
             }
             return walkspeed;
@@ -1084,7 +1089,13 @@ namespace PokemonGo.RocketAPI.Logic
                         foreach (var point in step.PolyLine.Points)
                         {
                             var distanceDelta = LocationUtils.CalculateDistanceInMeters(new GeoCoordinate(point.Latitude, point.Longitude), new GeoCoordinate(lastpoint.Latitude, lastpoint.Longitude));
-                            if (distanceDelta > 10)
+                            if (distanceDelta > 30 && distanceDelta < 100)
+                            {
+                                var newspeed = walkspeed * Math.Sqrt(distanceDelta / 100);
+                                Logger.ColoredConsoleWrite(ConsoleColor.DarkGreen, "Next step is only " + Math.Round(distanceDelta) + " meters. Slowing down to " + Math.Round(newspeed) + " km/h to not pass the target.");
+                                var update = await _navigation.HumanLikeWalking(new GeoCoordinate(point.Latitude, point.Longitude), newspeed, task, true, false);
+                            }
+                            if (distanceDelta > 100)
                             {
                                 var update = await _navigation.HumanLikeWalking(new GeoCoordinate(point.Latitude, point.Longitude), walkspeed, task, true, false);
                             }
@@ -1395,7 +1406,7 @@ namespace PokemonGo.RocketAPI.Logic
             {
                 if (StateSniper)
                 {
-                    Logger.ColoredConsoleWrite(ConsoleColor.Cyan, "I went to capture the pokemon...");
+                    Logger.ColoredConsoleWrite(ConsoleColor.Cyan, "I found the pokemon we want to capture...");
                     var result = await _client.Player.UpdatePlayerLocation(poke_lat, poke_long, _clientSettings.DefaultAltitude);
                 }
                 encounterPokemonResponse = await _client.Encounter.EncounterPokemon(encounter_id, spawnpoint_id);
@@ -1427,6 +1438,7 @@ namespace PokemonGo.RocketAPI.Logic
                 bool escaped = false;
                 bool berryThrown = false;
                 bool berryOutOfStock = false;
+                CryptoRandom r = new CryptoRandom(true);
                 Logger.ColoredConsoleWrite(ConsoleColor.Magenta, $"Encountered {StringUtils.getPokemonNameByLanguage(_clientSettings, pokeid)} CP {encounterPokemonResponse?.WildPokemon?.PokemonData?.Cp} IV {PokemonInfo.CalculatePokemonPerfection(encounterPokemonResponse.WildPokemon.PokemonData).ToString("0.00")}% Probability {Math.Round(probability.Value * 100)}%");
                 var iv = PokemonInfo.CalculatePokemonPerfection(encounterPokemonResponse.WildPokemon.PokemonData);
                 if (encounterPokemonResponse.WildPokemon.PokemonData.Cp > _clientSettings.MinCPtoCatch && iv > _clientSettings.MinIVtoCatch)
@@ -1475,7 +1487,6 @@ namespace PokemonGo.RocketAPI.Logic
                         }
                         // limit number of balls wasted by misses and log for UX because fools be tripin
                         //TODO eventually make the max miss count client configurable;
-                        Random r = new Random();
                         switch (missCount)
                         {
                             case 0:
@@ -1494,8 +1505,8 @@ namespace PokemonGo.RocketAPI.Logic
                                 break;
                             case 2:
                                 //adding another chance of forcing hit here to improve overall odds after 2 misses                                
-                                int rInt = r.Next(0, 2);
-                                if (rInt == 1)
+                                int rInt = r.Next(0, 100);
+                                if (rInt < 66)
                                 {
                                     // lets hit
                                     forceHit = true;
@@ -1510,19 +1521,19 @@ namespace PokemonGo.RocketAPI.Logic
                         if (missCount > 0)
                         {
                             //adding another chance of forcing hit here to improve overall odds after 1st miss                            
-                            int rInt = r.Next(0, 3);
-                            if (rInt == 1)
+                            int rInt = r.Next(0, 100);
+                            if (rInt < 50)
                             {
                                 // lets hit
                                 forceHit = true;
                             }
                         }
-                        caughtPokemonResponse = await CatchPokemonWithRandomVariables(encounter_id, spawnpoint_id, bestPokeball, forceHit);
+                        caughtPokemonResponse = await CatchPokemonWithRandomVariables(encounter_id, spawnpoint_id, bestPokeball, forceHit, r);
                         if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchMissed)
                         {
                             Logger.ColoredConsoleWrite(ConsoleColor.Magenta, $"Missed {StringUtils.getPokemonNameByLanguage(_clientSettings, pokeid)} while using {bestPokeball}");
                             missCount++;
-                            await RandomHelper.RandomDelay(1500, 6000);
+                            await RandomHelper.RandomDelay(500, 800);
                         }
                         else if (caughtPokemonResponse.Status == CatchPokemonResponse.Types.CatchStatus.CatchEscape)
                         {
@@ -1530,7 +1541,7 @@ namespace PokemonGo.RocketAPI.Logic
                             escaped = true;
                             //reset forceHit in case we randomly triggered on last throw.
                             forceHit = false;
-                            await RandomHelper.RandomDelay(1500, 6000);
+                            await RandomHelper.RandomDelay(500, 800);
                         }
                         // Update the best ball to ensure we can still throw
                         bestPokeball = await GetBestBall(encounterPokemonResponse?.WildPokemon, escaped);
@@ -1573,7 +1584,7 @@ namespace PokemonGo.RocketAPI.Logic
                                 _telegram.sendInformationText(TelegramUtil.TelegramUtilInformationTopics.Catch, StringUtils.getPokemonNameByLanguage(_clientSettings, pokeid), encounterPokemonResponse?.WildPokemon?.PokemonData?.Cp, PokemonInfo.CalculatePokemonPerfection(encounterPokemonResponse.WildPokemon.PokemonData).ToString("0.00"), bestPokeball, caughtPokemonResponse.CaptureAward.Xp.Sum());
 
                             _botStats.AddPokemon(1);
-                            await RandomHelper.RandomDelay(1500, 2000);
+                            await RandomHelper.RandomDelay(500, 800);
                         }
                     }
                     else
@@ -1597,10 +1608,10 @@ namespace PokemonGo.RocketAPI.Logic
             {
                 Logger.ColoredConsoleWrite(ConsoleColor.Red, $"Error catching Pokemon: {encounterPokemonResponse?.Status}");
             }
-            await RandomHelper.RandomDelay(1500, 2000);
+            await RandomHelper.RandomDelay(500, 800);
         }
 
-        private async Task<CatchPokemonResponse> CatchPokemonWithRandomVariables(ulong encounter_id, string spawnpoint_id, ItemId bestPokeball, bool forceHit)
+        private async Task<CatchPokemonResponse> CatchPokemonWithRandomVariables(ulong encounter_id, string spawnpoint_id, ItemId bestPokeball, bool forceHit, CryptoRandom r)
         {
             #region Reset Function Variables
             double normalizedRecticleSize = 1.95;
@@ -1611,8 +1622,7 @@ namespace PokemonGo.RocketAPI.Logic
             int Pb_Great = _clientSettings.Pb_Excellent;
             int Pb_Nice = _clientSettings.Pb_Nice;
             int Pb_Ordinary = _clientSettings.Pb_Ordinary;
-            var r = new Random();
-            int rInt = r.Next(0, 99);
+            int rInt = r.Next(0, 100);
             #endregion
 
             #region Randomize Throw Type
@@ -1642,14 +1652,14 @@ namespace PokemonGo.RocketAPI.Logic
                 hitTxt = "Ordinary";
             }
 
-            int rIntSpin = r.Next(0, 2);
-            if (rIntSpin == 0)
+            int rIntSpin = r.Next(0, 100);
+            if (rIntSpin < 40)
             {
                 spinModifier = 0.0;
                 spinTxt = "Straight";
             }
-            int rIntHit = r.Next(0, 2);
-            if (rIntHit == 0)
+            int rIntHit = r.Next(0, 100);
+            if (rIntHit < 50)
             {
                 forceHit = true;
             }
@@ -1794,7 +1804,7 @@ namespace PokemonGo.RocketAPI.Logic
                             StringUtils.getPokemonNameByLanguage(_clientSettings, duplicatePokemon.PokemonId), duplicatePokemon.Cp,
                             PokemonInfo.CalculatePokemonPerfection(duplicatePokemon).ToString("0.00"), bestPokemonOfType);
 
-                        await RandomHelper.RandomDelay(5000, 6000);
+                        await RandomHelper.RandomDelay(500, 600);
                     }
                 }
                 if (_clientSettings.pauseAtEvolve2)
@@ -2070,7 +2080,7 @@ namespace PokemonGo.RocketAPI.Logic
                 }
                 var transfer = await _client.Inventory.RecycleItem((ItemId)item.ItemId, item.Count);
                 Logger.ColoredConsoleWrite(ConsoleColor.Yellow, $"Recycled {item.Count}x {(ItemId)item.ItemId}", LogLevel.Info);
-                await RandomHelper.RandomDelay(1000, 5000);
+                await RandomHelper.RandomDelay(500, 600);
             }
         }
 
