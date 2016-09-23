@@ -568,7 +568,7 @@ namespace PokemonGo.RocketAPI.Logic
                 Logger.ColoredConsoleWrite(ConsoleColor.Yellow, "Trying to capture: " + _p._pokeId + " at " + _p._lat + " / " + _p._lng);
                 var result = await _client.Player.UpdatePlayerLocation(_p._lat, _p._lng, _clientSettings.DefaultAltitude);
                 Logger.ColoredConsoleWrite(ConsoleColor.Yellow, "Waiting for pokemon to appear...");
-                await RandomHelper.RandomDelay(4000, 6000);
+                await RandomHelper.RandomDelay(5000, 6000);
                 StateSniper = true;
                 await ExecuteCatchAllNearbyPokemons();
                 StateSniper = false;
@@ -591,7 +591,7 @@ namespace PokemonGo.RocketAPI.Logic
                 Logger.ColoredConsoleWrite(ConsoleColor.Yellow, "Trying to capture: " + id + " at " + coord.Latitude + " / " + coord.Longitude);
                 var result = await _client.Player.UpdatePlayerLocation(coord.Latitude, coord.Longitude, _clientSettings.DefaultAltitude);
                 Logger.ColoredConsoleWrite(ConsoleColor.Yellow, "Waiting for pokemon to appear");
-                await RandomHelper.RandomDelay(4000, 6000);
+                await RandomHelper.RandomDelay(5000, 6000);
                 StateSniper = true;
                 await ExecuteCatchAllNearbyPokemons();
                 StateSniper = false;
