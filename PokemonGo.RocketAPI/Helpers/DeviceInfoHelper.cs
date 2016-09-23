@@ -15,7 +15,7 @@ namespace PokemonGo.RocketAPI
                     { "AndroidBoardName", "msm8994" },
                     { "AndroidBootloader", "unknown" },
                     { "DeviceBrand", "OnePlus" },
-                    { "DeviceId", "3fe52da4a106b28d" },
+                    { "DeviceId", "529e8aa6201f78b5" },
                     { "DeviceModel", "OnePlus2" },
                     { "DeviceModelBoot", "qcom" },
                     { "DeviceModelIdentifier", "ONE A2003_24_160604" },
