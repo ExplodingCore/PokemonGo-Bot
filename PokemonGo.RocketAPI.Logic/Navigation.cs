@@ -76,11 +76,11 @@ namespace PokemonGo.RocketAPI.Logic
                 sourceLocation = new GeoCoordinate(_client.CurrentLatitude, _client.CurrentLongitude);
                 var currentDistanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
 
-                if (currentDistanceToTarget < 100)
+                if (currentDistanceToTarget < 0)
                 {
                     if (speedInMetersPerSecond > SpeedDownTo)
                     {
-                        if (log) { Logger.ColoredConsoleWrite(ConsoleColor.DarkCyan, $"We are within 100 meters of the target. Slowing down to ~50 km/h to not pass the target."); }
+                        if (log) { Logger.ColoredConsoleWrite(ConsoleColor.DarkCyan, $"We are within 20 meters of the target. Slowing down to ~50 km/h to not pass the target."); }
                         speedInMetersPerSecond = SpeedDownTo;
                     }
                 }
@@ -118,9 +118,9 @@ namespace PokemonGo.RocketAPI.Logic
                     await functionExecutedWhileWalking();// look for pokemon 
                 }
 
-                await RandomHelper.RandomDelay(50, 200);
+                await RandomHelper.RandomDelay(50, 100);
             }
-            while ((LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 30 && !fromgoogle) || LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 2);
+            while ((LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 30 && !fromgoogle) || LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 10);
             return result;
         }
 
