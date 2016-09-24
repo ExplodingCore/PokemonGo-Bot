@@ -33,11 +33,11 @@ namespace PokemonGo.RocketAPI.Console
         public static string EvolveLog = Path.Combine(logPath, "EvolveLog.txt");
         public static string path_pokedata = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PokeData");       
         
-        static void SharePokesnipperURI(string uri)
+        static void SharePokesniperURI(string uri)
         {
             try 
             {
-                var filename = Path.GetTempPath()+"pokesnipper";
+                var filename = Path.GetTempPath()+"pokesniper";
                 if (File.Exists(filename)){
                     MessageBox.Show("There is a pending pokemon.\nTry latter");
                 }
@@ -58,7 +58,7 @@ namespace PokemonGo.RocketAPI.Console
             {
                 if (args[0].Contains("pokesniper2"))
                 {
-                    SharePokesnipperURI(args[0]);
+                    SharePokesniperURI(args[0]);
                     return;
                 }
             }            
@@ -125,8 +125,13 @@ namespace PokemonGo.RocketAPI.Console
                 {
                     Task.Run(() =>
                     {
-                        Pokemons pokemonList = new Pokemons();
+                        if (Globals.simulatedPGO){
+                        var pokemonList = new GameAspectSimulator();
                         pokemonList.ShowDialog();
+                                 }else{
+                        var pokemonList = new Pokemons();
+                        pokemonList.ShowDialog();
+                                 }
                     });
                 }                
             }
@@ -246,6 +251,11 @@ namespace PokemonGo.RocketAPI.Console
             NBug.Settings.StoragePath = "Bugs\\";
             AppDomain.CurrentDomain.UnhandledException += NBug.Handler.UnhandledException;
         }
+    }
+    public static class ManualSnipePokemon
+    {
+        public static PokemonId? ID = null;
+        public static GeoCoordinate Location = null;
     }
     public static class Globals
     {
@@ -371,6 +381,8 @@ namespace PokemonGo.RocketAPI.Console
         internal static bool FirstLoad;
         public static int MinCPtoCatch = 0;
         public static int MinIVtoCatch = 0;
-        public static bool AvoidRegionLock = true;        
+        public static bool AvoidRegionLock = true;
+        public static bool ForceSnipe = false;
+        public static bool simulatedPGO = false;
     }
 }
