@@ -403,7 +403,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Release\" />
-    <Folder Include="Panels" />
     <Folder Include="Properties\DataSources\" />
   </ItemGroup>
   <ItemGroup>
