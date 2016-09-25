@@ -706,10 +706,10 @@ namespace PokemonGo.RocketAPI.Logic
             {
                 Logger.ColoredConsoleWrite(ConsoleColor.DarkRed, "Will resume sniping pokemon after pokeballs restock");
             }
-            #endregion
             _clientSettings.ForceSnipe = false;
             _clientSettings.ManualSnipePokemonID = null;
             _clientSettings.ManualSnipePokemonLocation = null;
+            #endregion
 
             #region Check and report
             // Check Distance from start
@@ -731,13 +731,11 @@ namespace PokemonGo.RocketAPI.Logic
                     if (pokeStops.Count() == 0)
                     {
                         Logger.ColoredConsoleWrite(ConsoleColor.Red, "We can't find any PokeStops in a range of " + _clientSettings.MaxWalkingRadiusInMeters + "m!");
-                        //await ExecuteCatchAllNearbyPokemons();
                     }
                 }
                 if (pokeStops.Count() == 0)
                 {
                     Logger.ColoredConsoleWrite(ConsoleColor.Red, "We can't find any PokeStops, which are unused! Probably the server are unstable, or you visted them all. Retrying..");
-                    //await ExecuteCatchAllNearbyPokemons();
                     tries--;
                 }
                 else
