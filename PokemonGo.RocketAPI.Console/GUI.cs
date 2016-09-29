@@ -48,11 +48,11 @@ namespace PokemonGo.RocketAPI.Console
         {
             _clientSettings = new Settings();
             Globals.FirstLoad = false;
-            //var ret = MessageBox.Show("The Bot isn't done! Be aware that you can get banned!\n\nDon't login with the new App Version (0.3.7) (0.3.5 is ok!)\n\nOr you will probably get Banned if you use the bot again!\n\nAre you sure you want to continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            //if (ret == DialogResult.No)
-            //{
-            //    Application.Exit();
-            //}
+            var ret = MessageBox.Show("ATTENTION:\nYOU CAN GET BANNED USING THIS BOT\nTHE API IS NOT UPDATE YET\nContinue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+            if (ret == DialogResult.No)
+            {
+                Application.Exit();
+            }
             Directory.CreateDirectory(Program.path);
             Directory.CreateDirectory(Program.path_translation);
             Directory.CreateDirectory(Program.path_pokedata);
@@ -324,6 +324,7 @@ namespace PokemonGo.RocketAPI.Console
 
                     checkBox_UseRazzberryIfChanceUnder.Checked = config.UseRazzBerry;
                     text_UseRazzberryChance.Text = (config.razzberry_chance * 100).ToString();
+                    NextBestBallOnEscape.Checked = config.NextBestBallOnEscape;
 
                     text_Pb_Excellent.Text = config.Pb_Excellent.ToString();
                     text_Pb_Great.Text = config.Pb_Great.ToString();
@@ -383,7 +384,6 @@ namespace PokemonGo.RocketAPI.Console
                     text_Telegram_Name.Text = config.TelegramName;
                     text_Telegram_LiveStatsDelay.Text = config.TelegramLiveStatsDelay.ToString();
 
-                    UseSkipLaggedAPI.Checked = config.pokevision;
                     SnipePokemonPokeCom.Checked = config.SnipePokemon;
                     AvoidRegionLock.Checked = config.AvoidRegionLock;
 
@@ -720,13 +720,13 @@ namespace PokemonGo.RocketAPI.Console
 
             // tab 6 - Walk
             ret &= textBoxToGlobalDouble(text_Speed);
-            //if ((makePrompts) && (Globals.speed > 15 && Globals.FirstLoad))
-            //{
-            //    var speed = Globals.speed;
-            //    var dialogResult = MessageBox.Show("The risk of being banned is significantly greater when using higher than human jogging speeds (e.g. > 15km/hr) Click 'No' to use ~10km/hr instead", $"Are you sure you wish to set your speed to {speed} ?", MessageBoxButtons.YesNo);
-            //    if (dialogResult == DialogResult.No)
-            //        Globals.speed = double.Parse("9.5", cords, NumberFormatInfo.InvariantInfo);
-            //}
+            if ((makePrompts) && (Globals.speed > 15 && Globals.FirstLoad))
+            {
+                var speed = Globals.speed;
+                var dialogResult = MessageBox.Show("The risk of being banned is significantly greater when using higher than human jogging speeds (e.g. > 15km/hr) Click 'No' to use ~10km/hr instead", $"Are you sure you wish to set your speed to {speed} ?", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.No)
+                    Globals.speed = double.Parse("9.5", cords, NumberFormatInfo.InvariantInfo);
+            }
 
             var value = text_MinWalkSpeed.Text;
             if (value != String.Empty)
@@ -784,7 +784,6 @@ namespace PokemonGo.RocketAPI.Console
             Globals.telAPI = text_Telegram_Token.Text;
             Globals.telName = text_Telegram_Name.Text;
             ret &= textBoxToGlobalInt(text_Telegram_LiveStatsDelay, "telDelay");
-            Globals.pokevision = UseSkipLaggedAPI.Checked;
             Globals.SnipePokemon = SnipePokemonPokeCom.Checked;
             if ((makePrompts) && (Globals.SnipePokemon && !Globals.FirstLoad))
             {
@@ -798,9 +797,10 @@ namespace PokemonGo.RocketAPI.Console
             // tab 8 updates
             Globals.AutoUpdate = checkbox_AutoUpdate.Checked;
             Globals.CheckWhileRunning = checkbox_checkWhileRunning.Checked;
-
+            Globals.NextBestBallOnEscape = NextBestBallOnEscape.Checked;
             Globals.settingsLanguage = langSelected;
-
+            Globals.NextDestinationOverride.Clear();
+            Globals.RouteToRepeat.Clear();
             #endregion
             return ret;
         }

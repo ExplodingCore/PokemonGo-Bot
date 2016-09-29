@@ -30,6 +30,11 @@ namespace PokemonGo.RocketAPI.Console
             InitializeComponent();
             
             locationPanel1.Init(true, 0, 0, 0);
+            btnPicPokes.Parent= locationPanel1.map;
+            btnPicEggs.Parent= locationPanel1.map;
+            btnPicItems.Parent= locationPanel1.map;
+            btnPicConfig.Parent = locationPanel1.map;
+            btnPicSnipe.Parent = locationPanel1.map;
         }
         void btnPicClose_Click(object sender, EventArgs e)
         {
@@ -149,7 +154,7 @@ namespace PokemonGo.RocketAPI.Console
             panel  = new PlayerPanel();
             panel.Anchor = allAnchors;
             panel.Location = new Point (1,1);
-            panel.Size = new Size(this.Size.Width -10, 200);
+            panel.Size = new Size(this.Size.Width -10, 280);
             panel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             Controls.Add(panel);
             panel.Visible = true;
