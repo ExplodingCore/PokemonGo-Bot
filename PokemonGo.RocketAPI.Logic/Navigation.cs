@@ -76,7 +76,7 @@ namespace PokemonGo.RocketAPI.Logic
                 sourceLocation = new GeoCoordinate(_client.CurrentLatitude, _client.CurrentLongitude);
                 var currentDistanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
 
-                if (currentDistanceToTarget < 0)
+                if (currentDistanceToTarget < 20 && !fromgoogle)
                 {
                     if (speedInMetersPerSecond > SpeedDownTo)
                     {
