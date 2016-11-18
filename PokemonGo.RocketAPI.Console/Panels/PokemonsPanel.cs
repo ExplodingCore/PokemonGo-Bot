@@ -27,6 +27,7 @@ namespace PokemonGo.RocketAPI.Console
         private static ISettings ClientSettings;
         private static Client client;
         public GetPlayerResponse profile;
+        public PlayerPanel playerPanel1 =null;
 
         private void loadAdditionalPokeData()
         {
@@ -66,7 +67,7 @@ namespace PokemonGo.RocketAPI.Console
             {
                 try
                 {
-                    if (Logic.Logic._client != null && Logic.Logic._client.readyToUse != false)
+                    if (Logic.Logic.Client != null && Logic.Logic.Client.readyToUse != false)
                     {
                         break;
                     }
@@ -97,15 +98,25 @@ namespace PokemonGo.RocketAPI.Console
             await check();
             try
             {
-                client = Logic.Logic._client;
+                client = Logic.Logic.Client;
                 if (client.readyToUse != false)
                 {
+                    await Task.Delay(1000);
                     inventory = await client.Inventory.GetInventory();
-                    pokemons =
+
+                    try
+                    {
+                        pokemons =
                         inventory.InventoryDelta.InventoryItems
                         .Select(i => i.InventoryItemData?.PokemonData)
                             .Where(p => p != null && p?.PokemonId > 0)
                             .OrderByDescending(key => key.Cp);
+                    }
+                    catch(Exception)
+                    {
+
+                    }
+                    
                     var families = inventory.InventoryDelta.InventoryItems
                         .Select(i => i.InventoryItemData?.Candy)
                         .Where(p => p != null && (int)p?.FamilyId > 0)
@@ -188,12 +199,15 @@ namespace PokemonGo.RocketAPI.Console
                     btnUseLure.Enabled = false;
                     statusTexbox.Text = string.Empty;
                     RefreshTitle();
+                    if (playerPanel1!=null) {
+                        playerPanel1.SetPokemons(pokemons);
+                    }
                 }
             }
             catch (Exception e)
             {
 
-                Logger.Error("[PokemonList-Error] " + e.StackTrace);
+                //Logger.Error("[PokemonList-Error] " + e.StackTrace);
                 await Task.Delay(1000); // Lets the API make a little pause, so we dont get blocked
                 Execute();
             }
@@ -222,6 +236,7 @@ namespace PokemonGo.RocketAPI.Console
         private void btnReload_Click(object sender, EventArgs e)
         {
             PokemonListView.Items.Clear();
+            init();
             Execute();
         }
 
@@ -462,7 +477,7 @@ namespace PokemonGo.RocketAPI.Console
                     {
                         File.AppendAllText(logs, $"[{date}] - MANUAL - Sucessfully transfered {transfered}/{total} Pokemons." + Environment.NewLine);
                     }
-                    MessageBox.Show("Succesfully transfered " + transfered + "/" + total + " Pokemons.", "Transfer status", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    statusTexbox.Text = $"Succesfully transfered {transfered}/{total} Pokemons.";
                 }
                 RefreshTitle();
             }
@@ -1129,6 +1144,10 @@ namespace PokemonGo.RocketAPI.Console
             Globals.UseIncenseGUIClick = true;
         }
 
+        private void PokemonsPanel_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 
 }

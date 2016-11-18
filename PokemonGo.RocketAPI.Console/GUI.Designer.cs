@@ -121,8 +121,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.CB_SimulatePGO = new System.Windows.Forms.CheckBox();
-            this.checkBox_UseBasicIncubators = new System.Windows.Forms.CheckBox();
-            this.checkBox_AutoIncubate = new System.Windows.Forms.CheckBox();
             this.checkBox_UseLuckyEggIfNotRunning = new System.Windows.Forms.CheckBox();
             this.checkBox_KeepPokemonWhichCanBeEvolved = new System.Windows.Forms.CheckBox();
             this.checkBox_EnablePokemonListGui = new System.Windows.Forms.CheckBox();
@@ -142,6 +140,7 @@
             this.label53 = new System.Windows.Forms.Label();
             this.text_UseRazzberryChance = new System.Windows.Forms.TextBox();
             this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
+            this.NextBestBallOnEscape = new System.Windows.Forms.CheckBox();
             this.checkBox_UseRazzberryIfChanceUnder = new System.Windows.Forms.CheckBox();
             this.numericUpDown3 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
@@ -262,8 +261,15 @@
             this.lang_de_btn = new System.Windows.Forms.Button();
             this.lang_en_btn = new System.Windows.Forms.Button();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.tabEggs = new System.Windows.Forms.TabPage();
+            this.checkBox_UseBasicIncubators = new System.Windows.Forms.CheckBox();
+            this.checkBox_AutoIncubate = new System.Windows.Forms.CheckBox();
+            this.groupBox_EggOptions = new System.Windows.Forms.GroupBox();
+            this.groupBox24 = new System.Windows.Forms.GroupBox();
+            this.checkBox_2kmEggs = new System.Windows.Forms.CheckBox();
+            this.checkBox_5kmEggs = new System.Windows.Forms.CheckBox();
+            this.checkBox_10kmEggs = new System.Windows.Forms.CheckBox();
             this.settingsBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.NextBestBallOnEscape = new System.Windows.Forms.CheckBox();
             this.tabProxies.SuspendLayout();
             this.tabItems.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -304,6 +310,9 @@
             this.groupBox20.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.tabEggs.SuspendLayout();
+            this.groupBox_EggOptions.SuspendLayout();
+            this.groupBox24.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.settingsBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -971,7 +980,7 @@
             this.checkedListBox_PokemonNotToTransfer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkedListBox_PokemonNotToTransfer.Name = "checkedListBox_PokemonNotToTransfer";
             this.checkedListBox_PokemonNotToTransfer.ScrollAlwaysVisible = true;
-            this.checkedListBox_PokemonNotToTransfer.Size = new System.Drawing.Size(199, 242);
+            this.checkedListBox_PokemonNotToTransfer.Size = new System.Drawing.Size(199, 225);
             this.checkedListBox_PokemonNotToTransfer.TabIndex = 0;
             // 
             // groupBox6
@@ -1007,7 +1016,7 @@
             this.checkedListBox_PokemonNotToCatch.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkedListBox_PokemonNotToCatch.Name = "checkedListBox_PokemonNotToCatch";
             this.checkedListBox_PokemonNotToCatch.ScrollAlwaysVisible = true;
-            this.checkedListBox_PokemonNotToCatch.Size = new System.Drawing.Size(204, 242);
+            this.checkedListBox_PokemonNotToCatch.Size = new System.Drawing.Size(204, 225);
             this.checkedListBox_PokemonNotToCatch.TabIndex = 0;
             // 
             // groupBox7
@@ -1043,7 +1052,7 @@
             this.checkedListBox_PokemonToEvolve.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkedListBox_PokemonToEvolve.Name = "checkedListBox_PokemonToEvolve";
             this.checkedListBox_PokemonToEvolve.ScrollAlwaysVisible = true;
-            this.checkedListBox_PokemonToEvolve.Size = new System.Drawing.Size(203, 242);
+            this.checkedListBox_PokemonToEvolve.Size = new System.Drawing.Size(203, 225);
             this.checkedListBox_PokemonToEvolve.TabIndex = 0;
             // 
             // tabGeneral
@@ -1354,8 +1363,6 @@
             // groupBox10
             // 
             this.groupBox10.Controls.Add(this.CB_SimulatePGO);
-            this.groupBox10.Controls.Add(this.checkBox_UseBasicIncubators);
-            this.groupBox10.Controls.Add(this.checkBox_AutoIncubate);
             this.groupBox10.Controls.Add(this.checkBox_UseLuckyEggIfNotRunning);
             this.groupBox10.Controls.Add(this.checkBox_KeepPokemonWhichCanBeEvolved);
             this.groupBox10.Controls.Add(this.checkBox_EnablePokemonListGui);
@@ -1380,30 +1387,6 @@
             this.CB_SimulatePGO.Size = new System.Drawing.Size(27, 30);
             this.CB_SimulatePGO.TabIndex = 50;
             this.CB_SimulatePGO.UseVisualStyleBackColor = true;
-            // 
-            // checkBox_UseBasicIncubators
-            // 
-            this.checkBox_UseBasicIncubators.AutoSize = true;
-            this.checkBox_UseBasicIncubators.Location = new System.Drawing.Point(53, 262);
-            this.checkBox_UseBasicIncubators.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.checkBox_UseBasicIncubators.Name = "checkBox_UseBasicIncubators";
-            this.checkBox_UseBasicIncubators.Size = new System.Drawing.Size(162, 21);
-            this.checkBox_UseBasicIncubators.TabIndex = 49;
-            this.checkBox_UseBasicIncubators.Text = "Use basic incubators";
-            this.checkBox_UseBasicIncubators.UseVisualStyleBackColor = true;
-            // 
-            // checkBox_AutoIncubate
-            // 
-            this.checkBox_AutoIncubate.AutoSize = true;
-            this.checkBox_AutoIncubate.Checked = true;
-            this.checkBox_AutoIncubate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox_AutoIncubate.Location = new System.Drawing.Point(27, 233);
-            this.checkBox_AutoIncubate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.checkBox_AutoIncubate.Name = "checkBox_AutoIncubate";
-            this.checkBox_AutoIncubate.Size = new System.Drawing.Size(297, 21);
-            this.checkBox_AutoIncubate.TabIndex = 48;
-            this.checkBox_AutoIncubate.Text = "Auto incubate (No guarantee that it works)";
-            this.checkBox_AutoIncubate.UseVisualStyleBackColor = true;
             // 
             // checkBox_UseLuckyEggIfNotRunning
             // 
@@ -1501,6 +1484,7 @@
             this.tabControl1.Controls.Add(this.tabPokemon);
             this.tabControl1.Controls.Add(this.tabThrows);
             this.tabControl1.Controls.Add(this.tabItems);
+            this.tabControl1.Controls.Add(this.tabEggs);
             this.tabControl1.Controls.Add(this.tabProxies);
             this.tabControl1.Controls.Add(this.tabWalkSettings);
             this.tabControl1.Controls.Add(this.tabMisc);
@@ -1599,7 +1583,7 @@
             this.groupBox8.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox8.Name = "groupBox8";
             this.groupBox8.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox8.Size = new System.Drawing.Size(352, 243);
+            this.groupBox8.Size = new System.Drawing.Size(352, 242);
             this.groupBox8.TabIndex = 54;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Miss Rate and Ball Choice";
@@ -1644,6 +1628,17 @@
             0,
             0,
             0});
+            // 
+            // NextBestBallOnEscape
+            // 
+            this.NextBestBallOnEscape.AutoSize = true;
+            this.NextBestBallOnEscape.Location = new System.Drawing.Point(29, 196);
+            this.NextBestBallOnEscape.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.NextBestBallOnEscape.Name = "NextBestBallOnEscape";
+            this.NextBestBallOnEscape.Size = new System.Drawing.Size(278, 21);
+            this.NextBestBallOnEscape.TabIndex = 55;
+            this.NextBestBallOnEscape.Text = "Use Next Best Ball if Pokemon Escapes";
+            this.NextBestBallOnEscape.UseVisualStyleBackColor = true;
             // 
             // checkBox_UseRazzberryIfChanceUnder
             // 
@@ -2412,7 +2407,7 @@
             this.checkedListBox_NotToSnipe.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.checkedListBox_NotToSnipe.Name = "checkedListBox_NotToSnipe";
             this.checkedListBox_NotToSnipe.ScrollAlwaysVisible = true;
-            this.checkedListBox_NotToSnipe.Size = new System.Drawing.Size(199, 242);
+            this.checkedListBox_NotToSnipe.Size = new System.Drawing.Size(199, 225);
             this.checkedListBox_NotToSnipe.TabIndex = 0;
             // 
             // AvoidRegionLock
@@ -2901,7 +2896,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(639, 112);
+            this.button2.Location = new System.Drawing.Point(640, 97);
             this.button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(136, 26);
@@ -3021,20 +3016,98 @@
             this.pictureBox2.TabStop = false;
             this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
+            // tabEggs
+            // 
+            this.tabEggs.Controls.Add(this.groupBox24);
+            this.tabEggs.Controls.Add(this.groupBox_EggOptions);
+            this.tabEggs.Location = new System.Drawing.Point(4, 25);
+            this.tabEggs.Name = "tabEggs";
+            this.tabEggs.Padding = new System.Windows.Forms.Padding(3);
+            this.tabEggs.Size = new System.Drawing.Size(755, 490);
+            this.tabEggs.TabIndex = 9;
+            this.tabEggs.Text = "Eggs";
+            this.tabEggs.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_UseBasicIncubators
+            // 
+            this.checkBox_UseBasicIncubators.AutoSize = true;
+            this.checkBox_UseBasicIncubators.Location = new System.Drawing.Point(8, 56);
+            this.checkBox_UseBasicIncubators.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBox_UseBasicIncubators.Name = "checkBox_UseBasicIncubators";
+            this.checkBox_UseBasicIncubators.Size = new System.Drawing.Size(162, 21);
+            this.checkBox_UseBasicIncubators.TabIndex = 51;
+            this.checkBox_UseBasicIncubators.Text = "Use basic incubators";
+            this.checkBox_UseBasicIncubators.UseVisualStyleBackColor = true;
+            // 
+            // checkBox_AutoIncubate
+            // 
+            this.checkBox_AutoIncubate.AutoSize = true;
+            this.checkBox_AutoIncubate.Checked = true;
+            this.checkBox_AutoIncubate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox_AutoIncubate.Location = new System.Drawing.Point(8, 34);
+            this.checkBox_AutoIncubate.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBox_AutoIncubate.Name = "checkBox_AutoIncubate";
+            this.checkBox_AutoIncubate.Size = new System.Drawing.Size(117, 21);
+            this.checkBox_AutoIncubate.TabIndex = 50;
+            this.checkBox_AutoIncubate.Text = "Auto incubate";
+            this.checkBox_AutoIncubate.UseVisualStyleBackColor = true;
+            // 
+            // groupBox_EggOptions
+            // 
+            this.groupBox_EggOptions.Controls.Add(this.checkBox_AutoIncubate);
+            this.groupBox_EggOptions.Controls.Add(this.checkBox_UseBasicIncubators);
+            this.groupBox_EggOptions.Location = new System.Drawing.Point(6, 6);
+            this.groupBox_EggOptions.Name = "groupBox_EggOptions";
+            this.groupBox_EggOptions.Size = new System.Drawing.Size(196, 84);
+            this.groupBox_EggOptions.TabIndex = 52;
+            this.groupBox_EggOptions.TabStop = false;
+            this.groupBox_EggOptions.Text = "Options";
+            // 
+            // groupBox24
+            // 
+            this.groupBox24.Controls.Add(this.checkBox_10kmEggs);
+            this.groupBox24.Controls.Add(this.checkBox_5kmEggs);
+            this.groupBox24.Controls.Add(this.checkBox_2kmEggs);
+            this.groupBox24.Location = new System.Drawing.Point(209, 7);
+            this.groupBox24.Name = "groupBox24";
+            this.groupBox24.Size = new System.Drawing.Size(244, 127);
+            this.groupBox24.TabIndex = 53;
+            this.groupBox24.TabStop = false;
+            this.groupBox24.Text = "Dont Use These Eggs";
+            // 
+            // checkBox_2kmEggs
+            // 
+            this.checkBox_2kmEggs.AutoSize = true;
+            this.checkBox_2kmEggs.Location = new System.Drawing.Point(7, 33);
+            this.checkBox_2kmEggs.Name = "checkBox_2kmEggs";
+            this.checkBox_2kmEggs.Size = new System.Drawing.Size(159, 21);
+            this.checkBox_2kmEggs.TabIndex = 0;
+            this.checkBox_2kmEggs.Text = "Dont Use 2 km Eggs";
+            this.checkBox_2kmEggs.UseVisualStyleBackColor = true;
+            // 
+            // checkbox_5kmEggs
+            // 
+            this.checkBox_5kmEggs.AutoSize = true;
+            this.checkBox_5kmEggs.Location = new System.Drawing.Point(7, 62);
+            this.checkBox_5kmEggs.Name = "checkbox_5kmEggs";
+            this.checkBox_5kmEggs.Size = new System.Drawing.Size(159, 21);
+            this.checkBox_5kmEggs.TabIndex = 1;
+            this.checkBox_5kmEggs.Text = "Dont Use 5 km Eggs";
+            this.checkBox_5kmEggs.UseVisualStyleBackColor = true;
+            // 
+            // checkbox_10kmEggs
+            // 
+            this.checkBox_10kmEggs.AutoSize = true;
+            this.checkBox_10kmEggs.Location = new System.Drawing.Point(7, 89);
+            this.checkBox_10kmEggs.Name = "checkbox_10kmEggs";
+            this.checkBox_10kmEggs.Size = new System.Drawing.Size(167, 21);
+            this.checkBox_10kmEggs.TabIndex = 2;
+            this.checkBox_10kmEggs.Text = "Dont Use 10 km Eggs";
+            this.checkBox_10kmEggs.UseVisualStyleBackColor = true;
+            // 
             // settingsBindingSource
             // 
             this.settingsBindingSource.DataSource = typeof(PokemonGo.RocketAPI.Console.Settings);
-            // 
-            // NextBestBallOnEscape
-            // 
-            this.NextBestBallOnEscape.AutoSize = true;
-            this.NextBestBallOnEscape.Location = new System.Drawing.Point(29, 196);
-            this.NextBestBallOnEscape.Margin = new System.Windows.Forms.Padding(4);
-            this.NextBestBallOnEscape.Name = "NextBestBallOnEscape";
-            this.NextBestBallOnEscape.Size = new System.Drawing.Size(278, 21);
-            this.NextBestBallOnEscape.TabIndex = 55;
-            this.NextBestBallOnEscape.Text = "Use Next Best Ball if Pokemon Escapes";
-            this.NextBestBallOnEscape.UseVisualStyleBackColor = true;
             // 
             // GUI
             // 
@@ -3060,7 +3133,7 @@
             this.MaximizeBox = false;
             this.Name = "GUI";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "PokeGoBot GUI Edition | Gui by GreenGold | Edit by IceQ1337 & gatno |";
+            this.Text = "PokeGoBot GUI Edition";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUI_FormClosing);
             this.Load += new System.EventHandler(this.GUI_Load);
             this.tabProxies.ResumeLayout(false);
@@ -3128,6 +3201,11 @@
             this.groupBox20.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            this.tabEggs.ResumeLayout(false);
+            this.groupBox_EggOptions.ResumeLayout(false);
+            this.groupBox_EggOptions.PerformLayout();
+            this.groupBox24.ResumeLayout(false);
+            this.groupBox24.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.settingsBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -3224,8 +3302,6 @@
         private System.Windows.Forms.TabPage tabWalkSettings;
         private System.Windows.Forms.Label label39;
         private System.Windows.Forms.ComboBox comboBox_Device;
-        private System.Windows.Forms.CheckBox checkBox_UseBasicIncubators;
-        private System.Windows.Forms.CheckBox checkBox_AutoIncubate;
         private System.Windows.Forms.CheckBox checkBox_UseLuckyEggIfNotRunning;
         private System.Windows.Forms.CheckBox checkBox_KeepPokemonWhichCanBeEvolved;
         private System.Windows.Forms.CheckBox checkBox_EnablePokemonListGui;
@@ -3370,6 +3446,14 @@
         private System.Windows.Forms.Label label55;
         private System.Windows.Forms.CheckBox CB_SimulatePGO;
         private System.Windows.Forms.CheckBox NextBestBallOnEscape;
+        private System.Windows.Forms.TabPage tabEggs;
+        private System.Windows.Forms.GroupBox groupBox24;
+        private System.Windows.Forms.GroupBox groupBox_EggOptions;
+        private System.Windows.Forms.CheckBox checkBox_AutoIncubate;
+        private System.Windows.Forms.CheckBox checkBox_UseBasicIncubators;
+        private System.Windows.Forms.CheckBox checkBox_10kmEggs;
+        private System.Windows.Forms.CheckBox checkBox_5kmEggs;
+        private System.Windows.Forms.CheckBox checkBox_2kmEggs;
         //private System.Windows.Forms.CheckBox checkBox_CatchLurePokemons;
     }
 }

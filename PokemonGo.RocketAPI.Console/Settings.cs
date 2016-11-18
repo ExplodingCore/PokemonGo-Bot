@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Device.Location;
+using Google.Protobuf;
 
 namespace PokemonGo.RocketAPI.Console
 {
@@ -29,6 +30,13 @@ namespace PokemonGo.RocketAPI.Console
     public class Settings : ISettings
     {
         /* ===================================[SETTINGS]================================= */
+
+        public ByteString SessionHash
+        {
+            get { return Globals.SessionHash; }
+            set { Globals.SessionHash = value; }
+        }
+
 
         /* AUTHENTICATION */
 
@@ -721,9 +729,9 @@ namespace PokemonGo.RocketAPI.Console
             get { return Globals._pauseTheWalking; }
             set
             {
-                if (Logic.Logic._instance != null)
+                if (Logic.Logic.Instance != null)
                 {
-                    Logic.Logic._instance.pauseWalking = value;
+                    Logic.Logic.Instance.PauseWalking = value;
                     Globals._pauseTheWalking = value;
                 }
             }
@@ -762,6 +770,25 @@ namespace PokemonGo.RocketAPI.Console
         {
             get { return Globals.simulatedPGO; }
             set { Globals.simulatedPGO = value; }
-        }        
+        }      
+        
+        public bool No2kmEggs
+        {
+            get { return Globals.No2kmEggs; }
+            set { Globals.No2kmEggs = value; }
+        }
+
+        public bool No5kmEggs
+        {
+            get { return Globals.No5kmEggs; }
+            set { Globals.No5kmEggs = value; }
+        }
+
+        public bool No10kmEggs
+        {
+            get { return Globals.No10kmEggs; }
+            set { Globals.No10kmEggs = value; }
+        }
+
     }
 }
