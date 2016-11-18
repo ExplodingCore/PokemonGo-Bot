@@ -248,7 +248,7 @@ namespace PokemonGo.RocketAPI.Console
             {
                 var transfer = await client.Inventory.RecycleItem((ItemId)item.ItemId, item.Count);
                 Logger.ColoredConsoleWrite(ConsoleColor.Yellow, $"Recycled {item.Count}x {(ItemId)item.ItemId}", LogLevel.Info);
-                await RandomHelper.RandomDelay(1000, 5000);
+                await RandomHelper.RandomDelay(1000, 2000);
             }
         }
 

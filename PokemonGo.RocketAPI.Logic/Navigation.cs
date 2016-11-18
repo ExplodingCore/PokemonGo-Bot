@@ -20,7 +20,6 @@ namespace PokemonGo.RocketAPI.Logic
 
         private static readonly CryptoRandom RandomDevice = new CryptoRandom(true);
 
-        private const double SpeedDownTo = 50 / 3.6;
         private readonly Client _client;
         public readonly ISettings _clientSettings;
 
@@ -78,10 +77,11 @@ namespace PokemonGo.RocketAPI.Logic
 
                 if (currentDistanceToTarget < 20 && !fromgoogle)
                 {
+                    var SpeedDownTo = speedInMetersPerSecond * Math.Sqrt(Math.Sqrt(currentDistanceToTarget / 100));
                     if (speedInMetersPerSecond > SpeedDownTo)
                     {
-                        if (log) { Logger.ColoredConsoleWrite(ConsoleColor.DarkCyan, $"We are within 20 meters of the target. Slowing down to ~50 km/h to not pass the target."); }
                         speedInMetersPerSecond = SpeedDownTo;
+                        if (log) { Logger.ColoredConsoleWrite(ConsoleColor.DarkCyan, $"We are within 20 meters of the target. Slowing down to ~" + Math.Round(speedInMetersPerSecond, 2) + " km/h to not pass the target."); }
                     }
                 }
 
@@ -118,9 +118,10 @@ namespace PokemonGo.RocketAPI.Logic
                     await functionExecutedWhileWalking();// look for pokemon 
                 }
 
-                await RandomHelper.RandomDelay(50, 100);
+                //await RandomHelper.RandomDelay(50, 100);
+                await RandomHelper.RandomDelay(10, 20);
             }
-            while ((LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 30 && !fromgoogle) || LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 10);
+            while ((LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 30 && !fromgoogle) || LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 30);
             return result;
         }
 

@@ -383,7 +383,7 @@ namespace PokemonGo.RocketAPI.Console
                 }
                 else
                 {
-                    await RandomHelper.RandomDelay(500, 800);
+                    await RandomHelper.RandomDelay(1000, 2000);
                 }
             }
 
@@ -458,7 +458,7 @@ namespace PokemonGo.RocketAPI.Console
                     }
                     else
                         failed += resp.Message + " ";
-                    await RandomHelper.RandomDelay(5000, 6000);
+                    await RandomHelper.RandomDelay(1000, 2000);
                 }
 
 
@@ -500,7 +500,7 @@ namespace PokemonGo.RocketAPI.Console
                     powerdup++;
                 else
                     failed += resp.Message + " ";
-                await RandomHelper.RandomDelay(1000, 3000);
+                await RandomHelper.RandomDelay(1000, 2000);
             }
             if (failed != string.Empty)
                 MessageBox.Show("Succesfully powered up " + powerdup + "/" + total + " Pokemons. Failed: " + failed, "Transfer status", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -542,7 +542,7 @@ namespace PokemonGo.RocketAPI.Console
                     }
                     else
                         failed += resp.Message + " ";
-                    await RandomHelper.RandomDelay(5000, 6000);
+                    await RandomHelper.RandomDelay(1000, 2000);
                 }
 
                 if (failed != string.Empty)
