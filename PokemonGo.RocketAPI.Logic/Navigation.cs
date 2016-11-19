@@ -74,15 +74,14 @@ namespace PokemonGo.RocketAPI.Logic
 
                 sourceLocation = new GeoCoordinate(_client.CurrentLatitude, _client.CurrentLongitude);
                 var currentDistanceToTarget = LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation);
+                if (currentDistanceToTarget < 30)
+                    continue;
 
-                if (currentDistanceToTarget < 20 && !fromgoogle)
+                if (currentDistanceToTarget < 40)
                 {
-                    var SpeedDownTo = speedInMetersPerSecond * Math.Sqrt(Math.Sqrt(currentDistanceToTarget / 100));
-                    if (speedInMetersPerSecond > SpeedDownTo)
-                    {
-                        speedInMetersPerSecond = SpeedDownTo;
-                        if (log) { Logger.ColoredConsoleWrite(ConsoleColor.DarkCyan, $"We are within 20 meters of the target. Slowing down to ~" + Math.Round(speedInMetersPerSecond, 2) + " km/h to not pass the target."); }
-                    }
+                    var SpeedDownTo = speedInMetersPerSecond / 3 * 2;
+                    speedInMetersPerSecond = SpeedDownTo;
+                    if (log) { Logger.ColoredConsoleWrite(ConsoleColor.DarkCyan, $"We are within " + Math.Truncate(currentDistanceToTarget) + " meters of the target. Slowing down to ~" + Math.Truncate(speedInMetersPerSecond) + " km/h to not pass the target."); }
                 }
 
                 nextWaypointDistance = Math.Min(currentDistanceToTarget, millisecondsUntilGetUpdatePlayerLocationResponse / 1000 * speedInMetersPerSecond);
@@ -118,10 +117,9 @@ namespace PokemonGo.RocketAPI.Logic
                     await functionExecutedWhileWalking();// look for pokemon 
                 }
 
-                //await RandomHelper.RandomDelay(50, 100);
-                await RandomHelper.RandomDelay(10, 20);
+                await RandomHelper.RandomDelay(50, 100);
             }
-            while ((LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 30 && !fromgoogle) || LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 30);
+            while ((LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 30));
             return result;
         }
 
