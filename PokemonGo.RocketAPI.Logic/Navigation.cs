@@ -77,12 +77,12 @@ namespace PokemonGo.RocketAPI.Logic
                 if (currentDistanceToTarget < 30)
                     continue;
 
-                if (currentDistanceToTarget < 40)
-                {
-                    var SpeedDownTo = speedInMetersPerSecond / 3 * 2;
-                    speedInMetersPerSecond = SpeedDownTo;
-                    if (log) { Logger.ColoredConsoleWrite(ConsoleColor.DarkCyan, $"We are within " + Math.Truncate(currentDistanceToTarget) + " meters of the target. Slowing down to ~" + Math.Truncate(speedInMetersPerSecond) + " km/h to not pass the target."); }
-                }
+                //if (currentDistanceToTarget < 40)
+                //{
+                //    var SpeedDownTo = walkingSpeedInKilometersPerHour * 0.6 /3.6;
+                //    speedInMetersPerSecond = SpeedDownTo;
+                //    if (log) { Logger.ColoredConsoleWrite(ConsoleColor.DarkCyan, $"We are within " + Math.Truncate(currentDistanceToTarget) + " meters of the target. Slowing down to ~" + Math.Truncate(speedInMetersPerSecond * 3.6) + " km/h to not pass the target."); }
+                //}
 
                 nextWaypointDistance = Math.Min(currentDistanceToTarget, millisecondsUntilGetUpdatePlayerLocationResponse / 1000 * speedInMetersPerSecond);
                 nextWaypointBearing = LocationUtils.DegreeBearing(sourceLocation, targetLocation);
@@ -117,7 +117,7 @@ namespace PokemonGo.RocketAPI.Logic
                     await functionExecutedWhileWalking();// look for pokemon 
                 }
 
-                await RandomHelper.RandomDelay(50, 100);
+                await RandomHelper.RandomDelay(20, 50);
             }
             while ((LocationUtils.CalculateDistanceInMeters(sourceLocation, targetLocation) >= 30));
             return result;
